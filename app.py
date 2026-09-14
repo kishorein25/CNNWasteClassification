@@ -8,6 +8,7 @@ import base64
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # Load your Teachable Machine model
 model = tf.keras.models.load_model('model/keras_model.h5')
@@ -66,5 +67,4 @@ def predict_webcam():
     return render_template('index.html', webcam_result=result)
 
 if __name__ == '__main__':
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(debug=True)
