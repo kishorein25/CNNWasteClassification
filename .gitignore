@@ -1,0 +1,9 @@
+tf_old/
+tf_keras/
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+*.tar.gz
+uploads/*

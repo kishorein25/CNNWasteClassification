@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Waste Classification</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        input, button { margin: 10px; padding: 10px; }
+        #webcam { border: 1px solid black; }
+    </style>
+</head>
+<body>
+    <h1>Waste Classification App</h1>
+
+    <!-- Upload Image -->
+    <h2>Upload Image</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Predict</button>
+    </form>
+    {% if upload_result %}
+        <h3>Result: {{ upload_result }}</h3>
+    {% endif %}
+
+    <!-- Webcam Capture -->
+    <h2>Webcam Prediction</h2>
+    <video id="webcam" width="320" height="240" autoplay></video><br>
+    <button onclick="capture()">Capture & Predict</button>
+    {% if webcam_result %}
+        <h3>Result: {{ webcam_result }}</h3>
+    {% endif %}
+
+    <form id="webcamForm" action="/predict_webcam" method="post" style="display:none;">
+        <input type="hidden" name="image" id="webcamImage">
+    </form>
+
+    <script>
+        const video = document.getElementById('webcam');
+        const webcamImage = document.getElementById('webcamImage');
+        const webcamForm = document.getElementById('webcamForm');
+
+        // Access webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => video.srcObject = stream)
+            .catch(err => console.error(err));
+
+        function capture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 224;
+            canvas.height = 224;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, 224, 224);
+            webcamImage.value = canvas.toDataURL('image/jpeg');
+            webcamForm.submit();
+        }
+    </script>
+</body>
+</html>
